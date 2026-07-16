@@ -162,7 +162,7 @@
             @endif
         </div>
 
-        {{-- ── Stat Cards ─────────────────────────────────────────── --}}
+        <!-- {{-- ── Stat Cards ─────────────────────────────────────────── --}}
         {{-- AOS: each card fades up with staggered delay --}}
         <div class="grid-3" style="margin-bottom:1.75rem;">
 
@@ -192,7 +192,7 @@
                     <div class="stat-label">Menunggu Verifikasi</div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         {{-- ── Profil Pendonor ─────────────────────────────────────── --}}
         @if($pendonor)

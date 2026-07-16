@@ -460,18 +460,20 @@
                     <p class="text-[0.82rem] text-black leading-[1.65] line-clamp-3 mb-4">{{ $news['text'] }}</p>
                     <div class="flex items-center justify-between text-[0.75rem] text-black">
                         <span>📅 {{ $news['date'] }}</span>
-                        <span class="text-[#FF3333] font-bold text-[0.78rem]">PMI Palembang →</span>
+                        <span class="text-[#FF3333] font-bold text-[0.78rem]">PMI   Palembang →</span>
                     </div>
                 </div>
             </a>
             @endforeach
 
-            {{-- DB Announcements --}}
+            <!-- {{-- DB Announcements --}}
             @foreach($announcements->take(3) as $i => $a)
             <div class="bg-[#fcfcfc] border border-[rgba(36,35,35,0.08)] rounded-[18px] overflow-hidden transition-[transform,border-color,box-shadow] duration-300"
                  data-aos="fade-up" data-aos-delay="{{ ($i+4) * 100 }}" style="cursor:default;">
                 <div class="h-[200px] bg-gradient-to-br from-[rgba(204,0,0,0.15)] to-[rgba(153,0,0,0.05)] flex items-center justify-center border-b border-[rgba(36,35,35,0.08)]">
-                    <span class="text-[4rem]">📢</span>
+                    <img src="{{ asset('storage/' . $a->gambar) }}" alt="{{ $a->judul }}"
+                        class="w-full h-[200px] object-cover block transition-transform duration-500 hover:scale-[1.04]"
+                         loading="lazy">
                 </div>
                 <div class="px-6 pt-5 pb-6">
                     <div class="inline-flex items-center gap-[0.3rem] text-[0.7rem] font-extrabold uppercase tracking-[0.08em] text-[#FF3333] mb-[0.6rem]">📢 Pengumuman</div>
@@ -483,7 +485,7 @@
                     </div>
                 </div>
             </div>
-            @endforeach
+            @endforeach -->
 
         </div>
     </div>
@@ -665,7 +667,7 @@
                 <li class="text-[0.9rem] text-black leading-[1.7]">Suhu tubuh normal (36–37,5°C) dan kondisi kesehatan umum baik</li>
                 <li class="text-[0.9rem] text-black leading-[1.7]">Interval donor minimal 56 hari (8 minggu) untuk whole blood</li>
             </ul>
-
+    
             <h4 class="text-[0.95rem] font-bold mt-5 mb-3 text-[#cc0000ec]">❌ Kondisi yang Menunda/Menggugurkan Donor:</h4>
             <ul class="pl-5 flex flex-col gap-[0.6rem]">
                 <li class="text-[0.9rem] text-black leading-[1.7]">Sedang dalam kondisi hamil, menyusui, atau haid</li>

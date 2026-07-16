@@ -232,12 +232,6 @@
             Belum punya akun? <a href="{{ route('register') }}">Daftar sekarang</a>
         </div>
 
-        {{-- Admin Info --}}
-        <div class="auth-divider" data-aos="fade-up" data-aos-delay="230">Info Login Admin</div>
-        <div class="auth-info-box" data-aos="fade-up" data-aos-delay="260">
-            🔑 Email: <strong>admin@donor.com</strong> | Password: <strong>admin123</strong>
-        </div>
-
     </div>
 </div>
 @endsection

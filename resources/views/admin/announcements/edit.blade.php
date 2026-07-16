@@ -45,7 +45,7 @@
             <input type="file" id="gambar" name="gambar" class="form-control"
                    accept="image/jpg,image/jpeg,image/png,image/webp"
                    onchange="previewImg(this,'img-preview')">
-            <p style="font-size:.75rem;color:var(--text-muted);margin-top:.3rem;">Upload baru untuk mengganti. JPG/PNG/WEBP, maks 2MB.</p>
+            <p style="font-size:.75rem;color:var(--text-muted);margin-top:.3rem;">Upload baru untuk mengganti. JPG/PNG/WEBP, maks 5MB.</p>
             <img id="img-preview" src="" alt=""
                  style="display:none;margin-top:.6rem;width:100%;max-width:380px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;border:1px solid var(--border);">
         </div>

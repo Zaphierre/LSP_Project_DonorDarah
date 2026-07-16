@@ -56,7 +56,7 @@ class AnnouncementController extends Controller
             'judul'           => 'required|string|max:255',
             'isi'             => 'required|string',
             'tanggal_publish' => 'required|date',
-            'gambar'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'gambar'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
         ]);
 
         $announcement = Announcement::findOrFail($id);
