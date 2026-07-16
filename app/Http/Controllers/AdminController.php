@@ -8,10 +8,11 @@ use App\Models\Registration;
 use App\Models\Schedule;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
-    // ── Dashboard ──────────────────────────────────────────────────────────
+    // -- Dashboard ----------------------------------------------------------
 
     public function index()
     {
@@ -33,7 +34,7 @@ class AdminController extends Controller
         return view('admin.dashboard', compact('stats', 'pendonor_pending', 'registrasi_pending', 'payment_pending'));
     }
 
-    // ── Verifikasi Akun ────────────────────────────────────────────────────
+    // -- Verifikasi Akun ----------------------------------------------------
 
     public function listUsers()
     {
@@ -43,18 +44,14 @@ class AdminController extends Controller
 
     public function verifyUser(Request $request, $id)
     {
-        $request->validate([
-            'action' => 'required|in:aktif,ditolak',
-        ]);
-
+        $request->validate(['action' => 'required|in:aktif,ditolak']);
         $user = User::findOrFail($id);
         $user->update(['status' => $request->action]);
-
         $msg = $request->action === 'aktif' ? 'Akun pendonor berhasil diaktifkan.' : 'Akun pendonor ditolak.';
         return back()->with('success', $msg);
     }
 
-    // ── Verifikasi Pendaftaran Jadwal ──────────────────────────────────────
+    // -- Verifikasi Pendaftaran Jadwal --------------------------------------
 
     public function listRegistrations()
     {
@@ -68,18 +65,13 @@ class AdminController extends Controller
             'action'  => 'required|in:diterima,ditolak',
             'catatan' => 'nullable|string|max:500',
         ]);
-
         $registration = Registration::findOrFail($id);
-        $registration->update([
-            'status'  => $request->action,
-            'catatan' => $request->catatan,
-        ]);
-
+        $registration->update(['status' => $request->action, 'catatan' => $request->catatan]);
         $msg = $request->action === 'diterima' ? 'Pendaftaran jadwal diterima.' : 'Pendaftaran jadwal ditolak.';
         return back()->with('success', $msg);
     }
 
-    // ── Verifikasi Pembayaran ──────────────────────────────────────────────
+    // -- Verifikasi Pembayaran ----------------------------------------------
 
     public function listPayments()
     {
@@ -93,18 +85,13 @@ class AdminController extends Controller
             'action'        => 'required|in:diterima,ditolak',
             'catatan_admin' => 'nullable|string|max:500',
         ]);
-
         $payment = Payment::findOrFail($id);
-        $payment->update([
-            'status'        => $request->action,
-            'catatan_admin' => $request->catatan_admin,
-        ]);
-
+        $payment->update(['status' => $request->action, 'catatan_admin' => $request->catatan_admin]);
         $msg = $request->action === 'diterima' ? 'Pembayaran dikonfirmasi.' : 'Pembayaran ditolak.';
         return back()->with('success', $msg);
     }
 
-    // ── Kelola Jadwal ──────────────────────────────────────────────────────
+    // -- Kelola Jadwal ------------------------------------------------------
 
     public function listSchedules()
     {
@@ -120,14 +107,29 @@ class AdminController extends Controller
     public function storeSchedule(Request $request)
     {
         $request->validate([
-            'tanggal'     => 'required|date|after_or_equal:today',
-            'waktu'       => 'required',
-            'lokasi'      => 'required|string|max:255',
-            'kuota'       => 'required|integer|min:1',
-            'keterangan'  => 'nullable|string',
+            'tanggal'      => 'required|date|after_or_equal:today',
+            'waktu'        => 'required',
+            'lokasi'       => 'required|string|max:255',
+            'lokasi_manual'=> 'required_if:lokasi,__other__|nullable|string|max:255',
+            'kuota'        => 'required|integer|min:1',
+            'biaya'        => 'nullable|numeric|min:0',
+            'keterangan'   => 'nullable|string',
+            'gambar_b64'   => 'nullable|string',
         ]);
 
-        Schedule::create($request->all());
+        $data = $request->only(['tanggal', 'waktu', 'kuota', 'biaya', 'keterangan']);
+        // Resolve lokasi: jika 'Lainnya', gunakan lokasi_manual
+        $data['lokasi'] = $request->lokasi === '__other__'
+            ? trim($request->lokasi_manual ?? '')
+            : $request->lokasi;
+        $data['is_active'] = $request->boolean('is_active', true);
+
+        if ($request->filled('gambar_b64')) {
+            $path = $this->saveBase64Image($request->gambar_b64, 'schedule-banners');
+            if ($path) $data['gambar'] = $path;
+        }
+
+        Schedule::create($data);
         return redirect()->route('admin.schedules')->with('success', 'Jadwal berhasil ditambahkan.');
     }
 
@@ -140,22 +142,63 @@ class AdminController extends Controller
     public function updateSchedule(Request $request, $id)
     {
         $request->validate([
-            'tanggal'    => 'required|date',
-            'waktu'      => 'required',
-            'lokasi'     => 'required|string|max:255',
-            'kuota'      => 'required|integer|min:1',
-            'keterangan' => 'nullable|string',
-            'is_active'  => 'boolean',
+            'tanggal'      => 'required|date',
+            'waktu'        => 'required',
+            'lokasi'       => 'required|string|max:255',
+            'lokasi_manual'=> 'required_if:lokasi,__other__|nullable|string|max:255',
+            'kuota'        => 'required|integer|min:1',
+            'biaya'        => 'nullable|numeric|min:0',
+            'keterangan'   => 'nullable|string',
+            'gambar_b64'   => 'nullable|string',
         ]);
 
         $schedule = Schedule::findOrFail($id);
-        $schedule->update($request->all());
+        $data = $request->only(['tanggal', 'waktu', 'kuota', 'biaya', 'keterangan']);
+        // Resolve lokasi: jika 'Lainnya', gunakan lokasi_manual
+        $data['lokasi'] = $request->lokasi === '__other__'
+            ? trim($request->lokasi_manual ?? '')
+            : $request->lokasi;
+        $data['is_active'] = $request->boolean('is_active', false);
+
+        if ($request->filled('gambar_b64')) {
+            if ($schedule->gambar) Storage::disk('public')->delete($schedule->gambar);
+            $path = $this->saveBase64Image($request->gambar_b64, 'schedule-banners');
+            if ($path) $data['gambar'] = $path;
+        }
+
+        $schedule->update($data);
         return redirect()->route('admin.schedules')->with('success', 'Jadwal berhasil diperbarui.');
     }
 
     public function destroySchedule($id)
     {
-        Schedule::findOrFail($id)->delete();
+        $schedule = Schedule::findOrFail($id);
+        if ($schedule->gambar) Storage::disk('public')->delete($schedule->gambar);
+        $schedule->delete();
         return back()->with('success', 'Jadwal berhasil dihapus.');
+    }
+
+    // -- Toggle Status Jadwal -----------------------------------------------
+
+    public function toggleScheduleStatus($id)
+    {
+        $schedule = Schedule::findOrFail($id);
+        $schedule->update(['is_active' => !$schedule->is_active]);
+        $msg = $schedule->is_active ? 'Jadwal berhasil diaktifkan.' : 'Jadwal berhasil dinonaktifkan.';
+        return back()->with('success', $msg);
+    }
+
+    // -- Helper: Save Base64 Image ------------------------------------------
+
+    private function saveBase64Image(string $base64, string $folder): ?string
+    {
+        if (str_contains($base64, ',')) {
+            [, $base64] = explode(',', $base64, 2);
+        }
+        $decoded = base64_decode($base64);
+        if (!$decoded) return null;
+        $filename = $folder . '/' . uniqid('img_', true) . '.jpg';
+        Storage::disk('public')->put($filename, $decoded);
+        return $filename;
     }
 }

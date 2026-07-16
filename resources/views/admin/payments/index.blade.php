@@ -18,7 +18,7 @@
                     <th>#</th>
                     <th>Pendonor</th>
                     <th>Jadwal</th>
-                    <th>Nominal</th>
+                    <th>Biaya</th>
                     <th>Bukti Transfer</th>
                     <th>Tgl. Upload</th>
                     <th>Status</th>
@@ -37,13 +37,32 @@
                     <td style="font-size:.85rem;">
                         <strong>{{ \Carbon\Carbon::parse($p->registration->schedule->tanggal)->format('d M Y') }}</strong>
                     </td>
-                    <td style="font-weight:700;">
-                        {{ $p->nominal ? 'Rp ' . number_format($p->nominal, 0, ',', '.') : '—' }}
+                    <td style="font-weight:600;white-space:nowrap;">
+                        @php $biaya = $p->registration->schedule->biaya ?? 0; @endphp
+                        @if($biaya > 0)
+                            Rp {{ number_format($biaya, 0, ',', '.') }}
+                        @else
+                            <span class="badge badge-diterima">Gratis</span>
+                        @endif
                     </td>
                     <td>
-                        <a href="{{ Storage::url($p->bukti_transfer) }}" target="_blank" class="btn btn-secondary btn-sm">
-                            🖼️ Lihat Bukti
-                        </a>
+                        @php
+                            $ext = pathinfo($p->bukti_transfer, PATHINFO_EXTENSION);
+                            $url = Storage::url($p->bukti_transfer);
+                        @endphp
+                        @if(in_array(strtolower($ext), ['jpg','jpeg','png','webp']))
+                            <img src="{{ $url }}"
+                                 alt="Bukti"
+                                 onclick="openImgModal('{{ $url }}')"
+                                 style="width:60px;height:60px;object-fit:cover;border-radius:8px;
+                                        cursor:pointer;border:1px solid var(--border);
+                                        transition:transform .2s,box-shadow .2s;"
+                                 onmouseover="this.style.transform='scale(1.08)';this.style.boxShadow='0 4px 12px rgba(0,0,0,.15)'"
+                                 onmouseout="this.style.transform='';this.style.boxShadow=''"
+                                 title="Klik untuk perbesar">
+                        @else
+                            <a href="{{ $url }}" target="_blank" class="btn btn-secondary btn-sm">📄 Lihat PDF</a>
+                        @endif
                     </td>
                     <td style="font-size:.8rem;color:var(--text-muted);">{{ $p->created_at->format('d M Y') }}</td>
                     <td><span class="badge badge-{{ $p->status }}">{{ ucfirst($p->status) }}</span></td>

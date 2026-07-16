@@ -160,7 +160,7 @@
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 1.5rem;
-            box-shadow: 0 1px 8px rgba(0,0,0,.06);
+            box-shadow: 0 2px 12px rgba(0,0,0,.08), 0 1px 3px rgba(0,0,0,.06);
         }
         .card-header { margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
         .card-header h2 { font-size: 1.1rem; font-weight: 700; color: var(--text); }
@@ -215,7 +215,7 @@
             border-bottom: 1px solid var(--border);
             font-weight: 700;
         }
-        tbody td { padding: .85rem 1rem; border-bottom: 1px solid var(--border-light); vertical-align: middle; color: var(--text); }
+        tbody td { padding: .85rem 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--text); }
         tbody tr:hover { background: var(--bg-card2); }
         tbody tr:last-child td { border-bottom: none; }
 
@@ -266,11 +266,11 @@
             border-radius: var(--radius);
             padding: 1.25rem;
             display: flex; align-items: center; gap: 1rem;
-            box-shadow: 0 1px 8px rgba(0,0,0,.05);
+            box-shadow: 0 2px 12px rgba(0,0,0,.08), 0 1px 3px rgba(0,0,0,.06);
             transition: box-shadow .2s, transform .2s;
         }
         .stat-card:hover {
-            box-shadow: 0 4px 20px rgba(0,0,0,.1);
+            box-shadow: 0 8px 28px rgba(0,0,0,.12);
             transform: translateY(-2px);
         }
         .stat-icon {
@@ -288,13 +288,16 @@
 
         /* ── Footer (Light Theme) ──────────────────────────────────── */
         footer {
-            text-align: center;
-            padding: 1.5rem;
             border-top: 1px solid var(--border);
-            color: var(--text-muted);
-            font-size: .8rem;
             background: #fff;
             margin-top: auto;
+        }
+
+        /* ── Footer responsive grid ─────────────────────────────────── */
+        @media(max-width: 768px) {
+            footer > div:first-child {
+                grid-template-columns: 1fr !important;
+            }
         }
 
         /* ── Page Header ────────────────────────────────────────────── */
@@ -332,15 +335,16 @@
     {{-- ── Navbar (Light Theme) ─────────────────────────────────────── --}}
     <nav class="navbar">
         {{-- Brand --}}
-        <a href="{{ route('home') }}" class="navbar-brand">
-            <div class="brand-logo">
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                    <rect x="9" y="2" width="4" height="18" rx="2" fill="white"/>
-                    <rect x="2" y="9" width="18" height="4" rx="2" fill="white"/>
-                </svg>
+        <a href="{{ route('home') }}" class="navbar-brand" style="gap:.6rem;">
+            <svg width="38" height="38" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="23" cy="23" r="23" fill="#CC0000"/>
+                <rect x="19" y="11" width="8" height="24" rx="4" fill="white"/>
+                <rect x="11" y="19" width="24" height="8" rx="4" fill="white"/>
+            </svg>
+            <div style="line-height:1.1;">
+                <div style="font-size:.95rem;font-weight:800;color:#CC0000;letter-spacing:-.01em;">PMI Kota Palembang</div>
+                <div style="font-size:.68rem;font-weight:500;color:#64748B;">Palang Merah Indonesia</div>
             </div>
-            <span>DonorHub</span>
-            <span class="dot" title="Online"></span>
         </a>
 
         {{-- Nav Links --}}
@@ -386,16 +390,81 @@
         @yield('content')
     </main>
 
-    {{-- Footer (Light Theme) --}}
-    <footer>
-        <p style="display:flex;align-items:center;justify-content:center;gap:.5rem;">
-            <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-                <circle cx="10" cy="10" r="10" fill="#CC0000"/>
-                <rect x="8.5" y="4" width="3" height="12" rx="1.5" fill="white"/>
-                <rect x="4" y="8.5" width="12" height="3" rx="1.5" fill="white"/>
-            </svg>
-            © {{ date('Y') }} DonorHub — Sistem Pendaftaran Jadwal Donor Darah. Setetes darah, sejuta harapan. 🩸
-        </p>
+    {{-- Footer (Upgraded — matches Landing Page style) --}}
+    <footer style="background:#fff;border-top:1px solid #E2E8F0;margin-top:auto;">
+        <div style="max-width:1280px;margin:0 auto;padding:2.5rem 1.5rem 1.5rem;display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:2rem;">
+
+            {{-- Brand & Contact --}}
+            <div>
+                <a href="{{ route('home') }}" style="display:flex;align-items:center;gap:.75rem;text-decoration:none;margin-bottom:1rem;">
+                    <svg width="38" height="38" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="23" cy="23" r="23" fill="#CC0000"/>
+                        <rect x="19" y="11" width="8" height="24" rx="4" fill="white"/>
+                        <rect x="11" y="19" width="24" height="8" rx="4" fill="white"/>
+                    </svg>
+                    <div>
+                        <div style="font-size:.95rem;font-weight:800;color:#CC0000;">PMI Kota Palembang</div>
+                        <div style="font-size:.7rem;color:#64748B;">Palang Merah Indonesia</div>
+                    </div>
+                </a>
+                <p style="font-size:.8rem;color:#64748B;line-height:1.7;margin-bottom:.75rem;">
+                    Sistem pendaftaran jadwal donor darah online PMI Kota Palembang.
+                </p>
+                <div style="font-size:.8rem;color:#64748B;display:flex;flex-direction:column;gap:.4rem;">
+                    <span>📍 Jl. Merdeka No. 1, Ilir Timur I, Palembang</span>
+                    <span>📞 (0711) 123-456</span>
+                    <span>📧 info@pmi-palembang.org</span>
+                    <span>🕐 Senin–Sabtu: 08.00–16.00 WIB</span>
+                </div>
+            </div>
+
+            {{-- Navigasi --}}
+            <div>
+                <p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#0F172A;margin-bottom:.85rem;">Navigasi</p>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:.5rem;">
+                    @auth
+                        @if(Auth::user()->isAdmin())
+                            <li><a href="{{ route('admin.dashboard') }}" style="font-size:.85rem;color:#64748B;text-decoration:none;" onmouseover="this.style.color='#CC0000'" onmouseout="this.style.color='#64748B'">Dashboard Admin</a></li>
+                        @else
+                            <li><a href="{{ route('donor.dashboard') }}" style="font-size:.85rem;color:#64748B;text-decoration:none;" onmouseover="this.style.color='#CC0000'" onmouseout="this.style.color='#64748B'">Dashboard</a></li>
+                            <li><a href="{{ route('donor.schedules') }}" style="font-size:.85rem;color:#64748B;text-decoration:none;" onmouseover="this.style.color='#CC0000'" onmouseout="this.style.color='#64748B'">Jadwal Donor</a></li>
+                            <li><a href="{{ route('donor.announcements') }}" style="font-size:.85rem;color:#64748B;text-decoration:none;" onmouseover="this.style.color='#CC0000'" onmouseout="this.style.color='#64748B'">Pengumuman</a></li>
+                        @endif
+                    @else
+                        <li><a href="{{ route('home') }}" style="font-size:.85rem;color:#64748B;text-decoration:none;" onmouseover="this.style.color='#CC0000'" onmouseout="this.style.color='#64748B'">Beranda</a></li>
+                        <li><a href="{{ route('login') }}" style="font-size:.85rem;color:#64748B;text-decoration:none;" onmouseover="this.style.color='#CC0000'" onmouseout="this.style.color='#64748B'">Login Pendonor</a></li>
+                        <li><a href="{{ route('register') }}" style="font-size:.85rem;color:#64748B;text-decoration:none;" onmouseover="this.style.color='#CC0000'" onmouseout="this.style.color='#64748B'">Daftar Pendonor</a></li>
+                    @endauth
+                </ul>
+            </div>
+
+            {{-- Kontak & Darurat --}}
+            <div>
+                <p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#0F172A;margin-bottom:.85rem;">Layanan Darurat</p>
+                <a href="tel:118"
+                   style="display:inline-flex;align-items:center;gap:.5rem;background:#CC0000;color:#fff;font-weight:700;font-size:.85rem;padding:.5rem 1rem;border-radius:8px;text-decoration:none;margin-bottom:1rem;transition:background .2s;"
+                   onmouseover="this.style.background='#990000'" onmouseout="this.style.background='#CC0000'">🚑 Ambulans: 118</a>
+                <p style="font-size:.75rem;color:#64748B;margin-top:.5rem;">Layanan 24 jam · Gratis untuk warga Palembang</p>
+                {{-- Social links --}}
+                <div style="display:flex;gap:.5rem;margin-top:1rem;">
+                    <a href="#" title="Facebook" style="width:36px;height:36px;border-radius:8px;background:#f1f5f9;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all .2s;" onmouseover="this.style.background='#FFF5F5';this.style.borderColor='#FCA5A5'" onmouseout="this.style.background='#f1f5f9';this.style.borderColor='#E2E8F0'">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </a>
+                    <a href="#" title="Instagram" style="width:36px;height:36px;border-radius:8px;background:#f1f5f9;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all .2s;" onmouseover="this.style.background='#FFF5F5';this.style.borderColor='#FCA5A5'" onmouseout="this.style.background='#f1f5f9';this.style.borderColor='#E2E8F0'">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="url(#ig2)"><defs><linearGradient id="ig2" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#f09433"/><stop offset="100%" style="stop-color:#bc1888"/></linearGradient></defs><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                    </a>
+                    <a href="#" title="WhatsApp" style="width:36px;height:36px;border-radius:8px;background:#f1f5f9;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all .2s;" onmouseover="this.style.background='#FFF5F5';this.style.borderColor='#FCA5A5'" onmouseout="this.style.background='#f1f5f9';this.style.borderColor='#E2E8F0'">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {{-- Footer Bottom --}}
+        <div style="border-top:1px solid #E2E8F0;padding:1rem 1.5rem;max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;">
+            <span style="font-size:.78rem;color:#64748B;">© {{ date('Y') }} PMI Kota Palembang. Semua hak dilindungi.</span>
+            <span style="font-size:.78rem;color:#64748B;">Setetes darah, sejuta harapan 🩸</span>
+        </div>
     </footer>
 
     {{-- AOS Library --}}

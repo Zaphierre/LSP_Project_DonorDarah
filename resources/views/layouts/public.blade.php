@@ -17,6 +17,14 @@
     <!-- Vite Assets (Tailwind CSS + JS) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    <style>
+        /* Mobile nav active state */
+        #mobile-menu .nav-link.active {
+            color: #CC0000 !important;
+            background: #FFF5F5 !important;
+        }
+    </style>
+
     @stack('styles')
 </head>
 {{-- Light theme body: white background, dark text --}}
@@ -471,11 +479,67 @@
 
     mobileMenu.querySelectorAll('.nav-link').forEach(function (link) {
         link.addEventListener('click', function () {
+            // Update active class on mobile nav
+            mobileMenu.querySelectorAll('.nav-link').forEach(function (l) {
+                l.classList.remove('active', 'text-[#CC0000]', 'bg-red-50');
+            });
+            this.classList.add('active');
+
+            // Sync desktop nav active state
+            const href = this.getAttribute('href');
+            document.querySelectorAll('#desktop-nav .nav-link').forEach(function (dl) {
+                dl.classList.remove('active');
+                if (dl.getAttribute('href') === href) {
+                    dl.classList.add('active');
+                }
+            });
+
             mobileMenu.classList.remove('open');
             hamburger.classList.remove('open');
             hamburger.setAttribute('aria-expanded', 'false');
         });
     });
+
+    // ── Also sync desktop nav clicks → mobile nav ──────────────────
+    document.querySelectorAll('#desktop-nav .nav-link').forEach(function (link) {
+        link.addEventListener('click', function () {
+            const href = this.getAttribute('href');
+            mobileMenu.querySelectorAll('.nav-link').forEach(function (ml) {
+                ml.classList.remove('active');
+                if (ml.getAttribute('href') === href) {
+                    ml.classList.add('active');
+                }
+            });
+        });
+    });
+
+    // ── IntersectionObserver: auto-update active on scroll ─────────
+    (function () {
+        const sections = ['beranda', 'stok-darah', 'jadwal', 'berita', 'relawan', 'pendidikan', 'kontak'];
+        const allNavLinks = document.querySelectorAll('.nav-link[href^="#"]');
+        if (!allNavLinks.length) return;
+
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    allNavLinks.forEach(function (link) {
+                        const target = link.getAttribute('href').replace('#', '');
+                        if (target === id) {
+                            link.classList.add('active');
+                        } else {
+                            link.classList.remove('active');
+                        }
+                    });
+                }
+            });
+        }, { threshold: 0.4, rootMargin: '-80px 0px -40% 0px' });
+
+        sections.forEach(function (id) {
+            const el = document.getElementById(id);
+            if (el) observer.observe(el);
+        });
+    })();
 
     // ══════════════════════════════════════════════════════════════
     // MODAL FUNCTIONS

@@ -32,15 +32,23 @@ class PendonorController extends Controller
 
     // ── Lihat Jadwal ───────────────────────────────────────────────────────
 
-    public function schedules()
+    public function schedules(Request $request)
     {
-        $user      = Auth::user();
-        $schedules = Schedule::where('is_active', true)
+        $user  = Auth::user();
+        $query = Schedule::where('is_active', true)
             ->where('tanggal', '>=', today())
-            ->orderBy('tanggal')
-            ->get();
+            ->orderBy('tanggal');
 
-        // Cek jadwal yang sudah didaftar user ini
+        // Poin 1: filter tanggal
+        if ($request->filled('dari')) {
+            $query->where('tanggal', '>=', $request->dari);
+        }
+        if ($request->filled('hingga')) {
+            $query->where('tanggal', '<=', $request->hingga);
+        }
+
+        $schedules = $query->get();
+
         $registeredScheduleIds = Registration::where('user_id', $user->id)
             ->whereIn('status', ['pending', 'diterima'])
             ->pluck('schedule_id')
@@ -98,7 +106,6 @@ class PendonorController extends Controller
         $request->validate([
             'registration_id' => 'required|exists:registrations,id',
             'bukti_transfer'  => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'nominal'         => 'nullable|numeric|min:0',
         ], [
             'bukti_transfer.mimes' => 'File harus berupa gambar (jpg/png) atau PDF.',
             'bukti_transfer.max'   => 'Ukuran file maksimal 2MB.',
@@ -118,10 +125,13 @@ class PendonorController extends Controller
 
         $path = $request->file('bukti_transfer')->store('payments', 'public');
 
+        // Poin 6: ambil nominal dari biaya jadwal, bukan dari input user
+        $nominal = $registration->schedule->biaya ?? 0;
+
         Payment::create([
             'registration_id' => $registration->id,
             'bukti_transfer'  => $path,
-            'nominal'         => $request->nominal,
+            'nominal'         => $nominal,
             'status'          => 'pending',
         ]);
 

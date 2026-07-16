@@ -67,15 +67,15 @@
         </div>
 
         {{-- Prev Button --}}
-        <button class="absolute top-1/2 -translate-y-1/2 left-6 md:left-3 w-[50px] h-[50px] rounded-full bg-white/15 backdrop-blur-[8px] border border-white/25 text-white text-[1.3rem] cursor-pointer flex items-center justify-center transition-[background,transform] duration-200 z-10 hover:bg-[rgba(204,0,0,0.6)] hover:scale-110 hover:-translate-y-1/2"
+        <button class="absolute top-1/2 -translate-y-1/2 left-6 md:left-3 w-[50px] h-[50px] rounded-full bg-white/20 backdrop-blur-[8px] border border-white/30 text-white text-[1.6rem] font-bold cursor-pointer flex items-center justify-center transition-all duration-200 z-50 hover:bg-[rgba(204,0,0,0.7)] hover:scale-110 hover:border-red-400 hover:shadow-[0_4px_20px_rgba(204,0,0,0.4)] active:scale-95"
                 id="carousel-prev" aria-label="Slide sebelumnya">&#8249;</button>
 
         {{-- Next Button --}}
-        <button class="absolute top-1/2 -translate-y-1/2 right-6 md:right-3 w-[50px] h-[50px] rounded-full bg-white/15 backdrop-blur-[8px] border border-white/25 text-white text-[1.3rem] cursor-pointer flex items-center justify-center transition-[background,transform] duration-200 z-10 hover:bg-[rgba(204,0,0,0.6)] hover:scale-110 hover:-translate-y-1/2"
+        <button class="absolute top-1/2 -translate-y-1/2 right-6 md:right-3 w-[50px] h-[50px] rounded-full bg-white/20 backdrop-blur-[8px] border border-white/30 text-white text-[1.6rem] font-bold cursor-pointer flex items-center justify-center transition-all duration-200 z-50 hover:bg-[rgba(204,0,0,0.7)] hover:scale-110 hover:border-red-400 hover:shadow-[0_4px_20px_rgba(204,0,0,0.4)] active:scale-95"
                 id="carousel-next" aria-label="Slide berikutnya">&#8250;</button>
 
         {{-- Dots --}}
-        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10"
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-50"
              role="tablist" aria-label="Navigasi carousel">
             <button class="carousel-dot w-2 h-2 rounded-full bg-white/40 cursor-pointer transition-all duration-300 border-0 active"
                     data-index="0" role="tab" aria-label="Slide 1" aria-selected="true"></button>
@@ -144,26 +144,26 @@
 {{-- ════════════════════════════════════════════════════════════
      STOK GOLONGAN DARAH
 ════════════════════════════════════════════════════════════ --}}
-<section class="py-20 bg-[#ac0000d0]" id="stok-darah">
+<section class="py-20 bg-[#8B0000]" id="stok-darah">
     <div class="max-w-[1280px] mx-auto px-8 md:px-5 w-full">
 
         <div class="mb-10">
-            <span class="inline-flex items-center gap-[0.4rem] bg-[rgba(204,0,0,0.08)] border border-[rgba(204,0,0,0.3)] text-[#FF3333] px-4 py-[0.35rem] rounded-[99px] text-[0.8rem] font-bold mb-4"
+            <span class="inline-flex items-center gap-[0.4rem] bg-white/15 border border-white/30 text-red-100 px-4 py-[0.35rem] rounded-[99px] text-[0.8rem] font-bold mb-4"
                   data-aos="fade-up">🩸 Ketersediaan Darah</span>
-            <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-black tracking-[-0.02em] mb-3"
+            <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-black tracking-[-0.02em] mb-3 text-white"
                 data-aos="fade-up" data-aos-delay="100">Stok Golongan Darah</h2>
-            <p class="text-base text-white leading-[1.7] max-w-[560px]"
+            <p class="text-base text-red-100 leading-[1.7] max-w-[560px]"
                data-aos="fade-up" data-aos-delay="150">Data ketersediaan darah di PMI Kota Palembang berdasarkan jenis golongan darah pendonor terdaftar.</p>
         </div>
 
         {{-- Blood Table Card --}}
-        <div class="bg-[#fcfcfc] border border-[rgba(36,35,35,0.08)] rounded-[20px] overflow-hidden"
+        <div class="bg-white border border-white/20 shadow-2xl rounded-[20px] overflow-hidden"
              data-aos="fade-up" data-aos-delay="200">
 
             {{-- Table Header --}}
-            <div class="px-8 py-6 border-b border-[rgba(36,35,35,0.08)] flex items-center justify-between flex-wrap gap-3">
-                <h3 class="text-base font-extrabold">📊 Data Stok Produk Darah</h3>
-                <div class="inline-flex items-center gap-[0.4rem] text-[0.75rem] text-black bg-[#ff9898c4] border border-[rgba(36,35,35,0.08)] px-[0.85rem] py-[0.35rem] rounded-[99px]">
+            <div class="px-8 py-6 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3">
+                <h3 class="text-base font-extrabold text-gray-900">📊 Data Stok Produk Darah</h3>
+                <div class="inline-flex items-center gap-[0.4rem] text-[0.75rem] text-gray-700 bg-red-50 border border-red-200 px-[0.85rem] py-[0.35rem] rounded-[99px]">
                     <div class="dot-live w-[7px] h-[7px] rounded-full bg-emerald-500 shrink-0"></div>
                     <span id="update-timestamp">Update: {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y, H:i') }} WIB</span>
                 </div>
@@ -174,12 +174,12 @@
                 <table class="w-full border-collapse" id="blood-stock-table">
                     <thead>
                         <tr>
-                            <th class="bg-white px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-black border-b border-[rgba(36,35,35,0.08)] font-bold">Golongan</th>
-                            <th class="bg-white px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-black border-b border-[rgba(36,35,35,0.08)] font-bold">Whole Blood (WB)</th>
-                            <th class="bg-white px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-black border-b border-[rgba(36,35,35,0.08)] font-bold">Red Cell (PRC)</th>
-                            <th class="bg-white px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-black border-b border-[rgba(36,35,35,0.08)] font-bold md:hidden">Trombosit (TC)</th>
-                            <th class="bg-white px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-black border-b border-[rgba(36,35,35,0.08)] font-bold md:hidden">Plasma (FFP)</th>
-                            <th class="bg-white px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-black border-b border-[rgba(36,35,35,0.08)] font-bold md:hidden">Total</th>
+                            <th class="bg-gray-50 px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-gray-700 border-b border-gray-200 font-bold">Golongan</th>
+                            <th class="bg-gray-50 px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-gray-700 border-b border-gray-200 font-bold">Whole Blood (WB)</th>
+                            <th class="bg-gray-50 px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-gray-700 border-b border-gray-200 font-bold">Red Cell (PRC)</th>
+                            <th class="bg-gray-50 px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-gray-700 border-b border-gray-200 font-bold md:hidden">Trombosit (TC)</th>
+                            <th class="bg-gray-50 px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-gray-700 border-b border-gray-200 font-bold md:hidden">Plasma (FFP)</th>
+                            <th class="bg-gray-50 px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-gray-700 border-b border-gray-200 font-bold md:hidden">Total</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -207,13 +207,13 @@
                                 $levelClass = $pct >= 60 ? 'fill-high' : ($pct >= 30 ? 'fill-medium' : 'fill-low');
                                 $donorCount = $donorCounts[$type] ?? 0;
                             @endphp
-                            <tr class="border-b border-[rgba(36,35,35,0.08)] last:border-b-0 hover:bg-[rgba(255,255,255,0.02)]">
+                            <tr class="border-b border-gray-200 last:border-b-0 hover:bg-red-50 transition-colors duration-150">
                                 <td class="px-5 py-4 text-[0.9rem] align-middle">
                                     <div class="flex items-center gap-3">
                                         <div class="inline-flex items-center justify-center w-9 h-9 rounded-[10px] bg-gradient-to-br from-[#CC0000] to-[#990000] text-white font-black text-[0.9rem]">{{ $type }}</div>
                                         <div>
-                                            <div class="font-bold text-[0.9rem]">Gol. {{ $type }}</div>
-                                            <div class="text-[0.75rem] text-black">{{ $donorCount }} pendonor</div>
+                                            <div class="font-bold text-[0.9rem] text-gray-900">Gol. {{ $type }}</div>
+                                            <div class="text-[0.75rem] text-gray-500">{{ $donorCount }} pendonor</div>
                                         </div>
                                     </div>
                                 </td>
@@ -251,10 +251,10 @@
                                 </td>
                                 <td class="px-5 py-4 text-[0.9rem] align-middle md:hidden">
                                     <div class="flex items-center gap-3">
-                                        <div class="flex-1 h-2 bg-white rounded-[99px] overflow-hidden min-w-[80px]">
+                                        <div class="flex-1 h-2 bg-gray-100 rounded-[99px] overflow-hidden min-w-[80px]">
                                             <div class="stock-fill h-full rounded-[99px] transition-[width] duration-1000 {{ $levelClass }}" style="width:{{ $pct }}%"></div>
                                         </div>
-                                        <span class="text-[0.85rem] font-black min-w-[40px] text-right text-[#cc0000ec]">{{ $total }}</span>
+                                        <span class="text-[0.85rem] font-black min-w-[40px] text-right text-[#CC0000]">{{ $total }}</span>
                                     </div>
                                 </td>
                             </tr>
@@ -264,14 +264,14 @@
             </div>
 
             {{-- Legend --}}
-            <div class="px-5 py-4 border-t border-[rgba(36,35,35,0.08)] flex gap-6 flex-wrap">
-                <span class="text-[0.75rem] text-black flex items-center gap-[0.4rem]">
+            <div class="px-5 py-4 border-t border-gray-200 flex gap-6 flex-wrap bg-gray-50">
+                <span class="text-[0.75rem] text-gray-600 flex items-center gap-[0.4rem]">
                     <span class="w-3 h-2 rounded-[2px] bg-gradient-to-r from-emerald-500 to-[#34d399] inline-block"></span> Cukup (≥60%)
                 </span>
-                <span class="text-[0.75rem] text-black flex items-center gap-[0.4rem]">
+                <span class="text-[0.75rem] text-gray-600 flex items-center gap-[0.4rem]">
                     <span class="w-3 h-2 rounded-[2px] bg-gradient-to-r from-amber-400 to-[#fbbf24] inline-block"></span> Sedang (30–59%)
                 </span>
-                <span class="text-[0.75rem] text-black flex items-center gap-[0.4rem]">
+                <span class="text-[0.75rem] text-gray-600 flex items-center gap-[0.4rem]">
                     <span class="w-3 h-2 rounded-[2px] bg-gradient-to-r from-red-500 to-[#f87171] inline-block"></span> Menipis (&lt;30%)
                 </span>
             </div>
@@ -324,31 +324,32 @@
         </div>
 
         {{-- Schedule Table --}}
-        <div class="bg-[#fcfcfc] border border-[rgba(36,35,35,0.08)] rounded-[18px] overflow-hidden"
+        <div class="bg-white border border-gray-200 shadow-sm rounded-[18px] overflow-hidden"
              data-aos="fade-up" data-aos-delay="250">
             @if($schedules->count() > 0)
             <div class="overflow-x-auto">
+                <div class="overflow-y-auto" style="max-height: 400px;">
                 <table class="w-full border-collapse" id="schedule-table">
-                    <thead>
+                    <thead class="sticky top-0">
                         <tr>
-                            <th class="bg-white px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-black border-b border-[rgba(36,35,35,0.08)] font-bold">#</th>
-                            <th class="bg-white px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-black border-b border-[rgba(36,35,35,0.08)] font-bold">Tanggal &amp; Waktu</th>
-                            <th class="bg-white px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-black border-b border-[rgba(36,35,35,0.08)] font-bold">Lokasi</th>
-                            <th class="bg-white px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-black border-b border-[rgba(36,35,35,0.08)] font-bold md:hidden">Keterangan</th>
-                            <th class="bg-white px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-black border-b border-[rgba(36,35,35,0.08)] font-bold">Kuota</th>
-                            <th class="bg-white px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-black border-b border-[rgba(36,35,35,0.08)] font-bold">Aksi</th>
+                            <th class="bg-gray-50 px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-gray-700 border-b border-gray-200 font-bold">#</th>
+                            <th class="bg-gray-50 px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-gray-700 border-b border-gray-200 font-bold">Tanggal &amp; Waktu</th>
+                            <th class="bg-gray-50 px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-gray-700 border-b border-gray-200 font-bold">Lokasi</th>
+                            <th class="bg-gray-50 px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-gray-700 border-b border-gray-200 font-bold md:hidden">Keterangan</th>
+                            <th class="bg-gray-50 px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-gray-700 border-b border-gray-200 font-bold">Kuota</th>
+                            <th class="bg-gray-50 px-5 py-[0.85rem] text-left text-[0.75rem] uppercase tracking-[0.06em] text-gray-700 border-b border-gray-200 font-bold">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="schedule-tbody">
                         @foreach($schedules as $i => $s)
                             @php $pct = $s->kuota > 0 ? min(100, ($s->kuota - $s->sisaKuota()) / $s->kuota * 100) : 100; @endphp
-                            <tr data-date="{{ $s->tanggal }}" class="schedule-row border-b border-[rgba(36,35,35,0.08)] last:border-b-0 hover:bg-[rgba(255,255,255,0.02)]">
+                            <tr data-date="{{ $s->tanggal }}" class="schedule-row border-b border-gray-200 last:border-b-0 hover:bg-red-50 transition-colors duration-150">
                                 <td class="px-5 py-4 text-[0.9rem] align-middle text-black">{{ $i + 1 }}</td>
                                 <td class="px-5 py-4 text-[0.9rem] align-middle">
                                     <div class="inline-flex items-center gap-[0.4rem] bg-[rgba(204,0,0,0.08)] border border-[rgba(204,0,0,0.3)] text-[#FF3333] px-3 py-[0.3rem] rounded-[99px] text-[0.8rem] font-bold">
                                         📅 {{ \Carbon\Carbon::parse($s->tanggal)->locale('id')->translatedFormat('d M Y') }}
                                     </div>
-                                    <div class="text-[0.8rem] text-black mt-[0.35rem]">
+                                    <div class="text-[0.8rem] text-gray-500 mt-[0.35rem]">
                                         🕐 {{ substr($s->waktu, 0, 5) }} WIB
                                     </div>
                                 </td>
@@ -385,6 +386,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                </div>
             </div>
             @else
             <div class="text-center py-14 px-8 text-black">
@@ -401,16 +403,16 @@
 {{-- ════════════════════════════════════════════════════════════
      BERITA PMI
 ════════════════════════════════════════════════════════════ --}}
-<section class="py-20 bg-[#ac0000d0]" id="berita" aria-label="Berita PMI Kota Palembang">
+<section class="py-20 bg-white" id="berita" aria-label="Berita PMI Kota Palembang">
     <div class="max-w-[1280px] mx-auto px-8 md:px-5 w-full">
 
         <div class="flex items-end justify-between flex-wrap gap-4 mb-10">
             <div>
-                <span class="inline-flex items-center gap-[0.4rem] bg-[rgba(204,0,0,0.08)] border border-[rgba(204,0,0,0.3)] text-[#FF3333] px-4 py-[0.35rem] rounded-[99px] text-[0.8rem] font-bold mb-4"
+                <span class="inline-flex items-center gap-[0.4rem] bg-[rgba(204,0,0,0.08)] border border-[rgba(204,0,0,0.3)] text-[#CC0000] px-4 py-[0.35rem] rounded-[99px] text-[0.8rem] font-bold mb-4"
                       data-aos="fade-up">📰 Berita Terkini</span>
-                <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-black tracking-[-0.02em] mb-3"
+                <h2 class="text-[clamp(1.75rem,3vw,2.5rem)] font-black tracking-[-0.02em] mb-3 text-gray-900"
                     data-aos="fade-up" data-aos-delay="100">Berita PMI Kota Palembang</h2>
-                <p class="text-base text-white leading-[1.7] max-w-[560px]"
+                <p class="text-base text-gray-600 leading-[1.7] max-w-[560px]"
                    data-aos="fade-up" data-aos-delay="150">Ikuti perkembangan kegiatan, program, dan informasi terbaru dari PMI Kota Palembang.</p>
             </div>
         </div>
@@ -688,7 +690,7 @@
     (function() {
         const track   = document.getElementById('carousel-track');
         const dots    = document.querySelectorAll('.carousel-dot');
-        const slides  = document.querySelectorAll('.carousel-track > div');
+        const slides  = document.querySelectorAll('#carousel-track > div');
         let current   = 0;
         let autoTimer = null;
 

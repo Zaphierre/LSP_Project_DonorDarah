@@ -22,7 +22,7 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('admin.announcements.store') }}">
+    <form method="POST" action="{{ route('admin.announcements.store') }}" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
             <label class="form-label" for="judul">Judul Pengumuman <span style="color:var(--red-primary);">*</span></label>
@@ -31,6 +31,18 @@
         <div class="form-group">
             <label class="form-label" for="isi">Isi Pengumuman <span style="color:var(--red-primary);">*</span></label>
             <textarea id="isi" name="isi" class="form-control" rows="8" placeholder="Tulis isi pengumuman di sini..." required>{{ old('isi') }}</textarea>
+        </div>
+        {{-- Gambar banner --}}
+        <div class="form-group">
+            <label class="form-label" for="gambar">Gambar Banner (Opsional)</label>
+            <input type="file" id="gambar" name="gambar" class="form-control"
+                   accept="image/jpg,image/jpeg,image/png,image/webp"
+                   onchange="previewImg(this,'img-preview')">
+            <p style="font-size:.75rem;color:var(--text-muted);margin-top:.3rem;">Format: JPG, PNG, WEBP. Maks 2MB.</p>
+            <img id="img-preview" src="" alt=""
+                 style="display:none;margin-top:.6rem;width:100%;max-width:380px;
+                        aspect-ratio:16/9;object-fit:cover;border-radius:8px;
+                        border:1px solid var(--border);">
         </div>
         <div class="grid-2">
             <div class="form-group">
@@ -52,3 +64,16 @@
     </form>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function previewImg(input, previewId) {
+    const preview = document.getElementById(previewId);
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
+        reader.readAsDataURL(input.files[0]);
+    } else { preview.src = ''; preview.style.display = 'none'; }
+}
+</script>
+@endpush

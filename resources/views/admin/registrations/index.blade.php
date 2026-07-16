@@ -21,7 +21,7 @@
                     <th>Lokasi</th>
                     <th>Tgl. Daftar</th>
                     <th>Status</th>
-                    <th>Catatan</th>
+                    <th>Biaya</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -40,7 +40,14 @@
                     <td style="font-size:.85rem;max-width:180px;">{{ $reg->schedule->lokasi }}</td>
                     <td style="font-size:.8rem;color:var(--text-muted);">{{ $reg->created_at->format('d M Y') }}</td>
                     <td><span class="badge badge-{{ $reg->status }}">{{ ucfirst($reg->status) }}</span></td>
-                    <td style="font-size:.8rem;color:var(--text-muted);max-width:150px;">{{ $reg->catatan ?? '—' }}</td>
+                    <td style="font-size:.8rem;font-weight:600;white-space:nowrap;">
+                        @php $biaya = $reg->schedule->biaya ?? 0; @endphp
+                        @if($biaya > 0)
+                            Rp {{ number_format($biaya, 0, ',', '.') }}
+                        @else
+                            <span class="badge badge-diterima">Gratis</span>
+                        @endif
+                    </td>
                     <td>
                         @if($reg->status === 'pending')
                         <form method="POST" action="{{ route('admin.registrations.verify', $reg->id) }}" style="display:flex;gap:.4rem;flex-wrap:wrap;">

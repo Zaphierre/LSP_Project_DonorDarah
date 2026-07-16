@@ -76,6 +76,7 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/jadwal/{id}/edit',    [AdminController::class, 'editSchedule'])->name('schedules.edit');
     Route::put('/jadwal/{id}',         [AdminController::class, 'updateSchedule'])->name('schedules.update');
     Route::delete('/jadwal/{id}',      [AdminController::class, 'destroySchedule'])->name('schedules.destroy');
+    Route::post('/jadwal/{id}/toggle', [AdminController::class, 'toggleScheduleStatus'])->name('schedules.toggle');
 
     // Kelola Pengumuman
     Route::get('/pengumuman',          [AnnouncementController::class, 'index'])->name('announcements.index');

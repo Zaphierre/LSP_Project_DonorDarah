@@ -11,6 +11,8 @@ class Schedule extends Model
         'waktu',
         'lokasi',
         'kuota',
+        'biaya',
+        'gambar',
         'keterangan',
         'is_active',
     ];
@@ -18,6 +20,7 @@ class Schedule extends Model
     protected $casts = [
         'tanggal'   => 'date',
         'is_active' => 'boolean',
+        'biaya'     => 'decimal:2',
     ];
 
     public function registrations()

@@ -1,10 +1,10 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Announcement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class AnnouncementController extends Controller
 {
@@ -22,20 +22,25 @@ class AnnouncementController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'judul'          => 'required|string|max:255',
-            'isi'            => 'required|string',
-            'tanggal_publish'=> 'required|date',
-            'is_active'      => 'boolean',
+            'judul'           => 'required|string|max:255',
+            'isi'             => 'required|string',
+            'tanggal_publish' => 'required|date',
+            'gambar'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        Announcement::create([
-            'admin_id'       => Auth::id(),
-            'judul'          => $request->judul,
-            'isi'            => $request->isi,
-            'tanggal_publish'=> $request->tanggal_publish,
-            'is_active'      => $request->boolean('is_active', true),
-        ]);
+        $data = [
+            'admin_id'        => Auth::id(),
+            'judul'           => $request->judul,
+            'isi'             => $request->isi,
+            'tanggal_publish' => $request->tanggal_publish,
+            'is_active'       => $request->boolean('is_active', true),
+        ];
 
+        if ($request->hasFile('gambar')) {
+            $data['gambar'] = $request->file('gambar')->store('announcements', 'public');
+        }
+
+        Announcement::create($data);
         return redirect()->route('admin.announcements.index')->with('success', 'Pengumuman berhasil ditambahkan.');
     }
 
@@ -48,26 +53,38 @@ class AnnouncementController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'judul'          => 'required|string|max:255',
-            'isi'            => 'required|string',
-            'tanggal_publish'=> 'required|date',
-            'is_active'      => 'boolean',
+            'judul'           => 'required|string|max:255',
+            'isi'             => 'required|string',
+            'tanggal_publish' => 'required|date',
+            'gambar'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $announcement = Announcement::findOrFail($id);
-        $announcement->update([
-            'judul'          => $request->judul,
-            'isi'            => $request->isi,
-            'tanggal_publish'=> $request->tanggal_publish,
-            'is_active'      => $request->boolean('is_active'),
-        ]);
+        $data = [
+            'judul'           => $request->judul,
+            'isi'             => $request->isi,
+            'tanggal_publish' => $request->tanggal_publish,
+            'is_active'       => $request->boolean('is_active'),
+        ];
 
+        if ($request->hasFile('gambar')) {
+            if ($announcement->gambar) {
+                Storage::disk('public')->delete($announcement->gambar);
+            }
+            $data['gambar'] = $request->file('gambar')->store('announcements', 'public');
+        }
+
+        $announcement->update($data);
         return redirect()->route('admin.announcements.index')->with('success', 'Pengumuman berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
-        Announcement::findOrFail($id)->delete();
+        $announcement = Announcement::findOrFail($id);
+        if ($announcement->gambar) {
+            Storage::disk('public')->delete($announcement->gambar);
+        }
+        $announcement->delete();
         return back()->with('success', 'Pengumuman berhasil dihapus.');
     }
 }

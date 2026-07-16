@@ -1,25 +1,28 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Jadwal Donor')
 
 @push('styles')
 <style>
-/* ── Schedule card — light theme ── */
+/* ── Schedule card — light theme, h-full flex-col ── */
 .schedule-card {
     background: #fff;
     border: 1px solid #E2E8F0;
     border-radius: 14px;
-    padding: 1.5rem;
+    padding: 1.1rem 1.25rem;
     position: relative;
     overflow: hidden;
     transition: box-shadow .25s, transform .25s;
-    box-shadow: 0 1px 8px rgba(0,0,0,.05);
+    box-shadow: 0 2px 10px rgba(0,0,0,.08), 0 1px 3px rgba(0,0,0,.05);
+    /* Poin 3: equal height + push button to bottom */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 .schedule-card:hover {
-    box-shadow: 0 8px 32px rgba(204,0,0,0.12);
+    box-shadow: 0 10px 36px rgba(204,0,0,0.14);
     transform: translateY(-3px);
 }
-/* Red top gradient bar */
 .schedule-card::before {
     content: '';
     position: absolute;
@@ -27,67 +30,55 @@
     height: 3px;
     background: linear-gradient(90deg, #CC0000, #FF4444);
 }
-/* Registered state border */
 .schedule-card.registered {
     border-color: #A7F3D0;
-    background: #FAFFFE;
+    background: #F0FFF8;
 }
-
-/* Date display */
-.schedule-date {
-    font-size: 1.05rem;
-    font-weight: 800;
-    color: #CC0000;
-    margin-bottom: .35rem;
-}
-.schedule-time {
-    font-size: .85rem;
-    color: #64748B;
-    margin-bottom: .45rem;
-}
-.schedule-location {
-    font-size: .875rem;
-    color: #374151;
-    font-weight: 500;
-    margin-bottom: .65rem;
-}
+.schedule-date   { font-size:1rem; font-weight:800; color:#CC0000; margin-bottom:.25rem; }
+.schedule-time   { font-size:.82rem; color:#64748B; margin-bottom:.35rem; }
+.schedule-location { font-size:.85rem; color:#374151; font-weight:600; margin-bottom:.5rem; }
+/* Poin 3: flex-grow on note so it pushes button down */
 .schedule-note {
-    font-size: .85rem;
-    color: #64748B;
-    margin-bottom: .65rem;
-    line-height: 1.6;
+    font-size:.8rem; color:#64748B;
+    line-height:1.55;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+    flex-grow: 1;
+    margin-bottom:.6rem;
 }
+.schedule-spacer { flex-grow: 1; } /* fallback spacer if no note */
+.quota-bar-wrap  { display:flex; align-items:center; gap:.5rem; margin-bottom:.75rem; }
+.quota-text      { font-size:.76rem; color:#64748B; white-space:nowrap; font-weight:600; }
+.quota-bar-bg    { flex:1; height:6px; background:#F1F5F9; border-radius:99px; overflow:hidden; }
+.quota-bar-fill  { height:100%; border-radius:99px; transition:width .3s; }
+.registered-badge { position:absolute; top:.65rem; right:.65rem; }
 
-/* Quota bar */
-.quota-bar-wrap {
-    display: flex; align-items: center; gap: .6rem;
-    margin-bottom: 1rem;
+/* ── Filter bar ── */
+.filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: .75rem;
+    background: #fff;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: .85rem 1rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,.05);
 }
-.quota-text { font-size: .8rem; color: #64748B; white-space: nowrap; }
-.quota-bar-bg {
-    flex: 1;
-    height: 7px;
-    background: #F1F5F9;
-    border-radius: 99px;
-    overflow: hidden;
+.filter-group { display:flex; flex-direction:column; gap:.3rem; }
+.filter-group label { font-size:.75rem; font-weight:600; color:#64748B; }
+.filter-group input[type="date"] {
+    border:1.5px solid #E2E8F0; border-radius:8px;
+    padding:.45rem .75rem; font-size:.85rem;
+    font-family:inherit; color:#0F172A;
+    transition:border-color .2s;
+    background:#F8FAFC;
 }
-.quota-bar-fill {
-    height: 100%;
-    border-radius: 99px;
-    transition: width .3s;
-}
-
-/* Registered badge (absolute top-right) */
-.registered-badge {
-    position: absolute;
-    top: .75rem; right: .75rem;
-}
+.filter-group input[type="date"]:focus { outline:none; border-color:#CC0000; box-shadow:0 0 0 3px rgba(204,0,0,.1); }
 </style>
 @endpush
 
 @section('content')
-
-{{-- Layout --}}
 <div class="layout">
 
     {{-- ── Sidebar ── --}}
@@ -124,6 +115,31 @@
             </div>
         </div>
 
+        {{-- Poin 1: Filter inline horizontal --}}
+        <form method="GET" action="{{ route('donor.schedules') }}" data-aos="fade-up">
+            <div class="filter-bar">
+                <div class="filter-group">
+                    <label for="dari">📆 Dari</label>
+                    <input type="date" id="dari" name="dari"
+                           value="{{ request('dari') }}"
+                           min="{{ today()->toDateString() }}">
+                </div>
+                <div class="filter-group">
+                    <label for="hingga">📆 Hingga</label>
+                    <input type="date" id="hingga" name="hingga"
+                           value="{{ request('hingga') }}">
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm" style="height:fit-content;">
+                    🔍 Terapkan
+                </button>
+                @if(request()->hasAny(['dari','hingga']))
+                    <a href="{{ route('donor.schedules') }}" class="btn btn-secondary btn-sm" style="height:fit-content;">
+                        ✕ Reset
+                    </a>
+                @endif
+            </div>
+        </form>
+
         {{-- Account not verified warning --}}
         @if(!Auth::user()->isAktif())
             <div class="alert alert-warning" data-aos="fade-down">
@@ -133,7 +149,8 @@
 
         {{-- Schedule Cards Grid --}}
         @if($schedules->count() > 0)
-            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.25rem;">
+            {{-- Poin 3: align-items:stretch agar semua card sama tinggi --}}
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1rem;align-items:stretch;">
                 @foreach($schedules as $i => $s)
                     @php
                         $sisa       = $s->sisaKuota();
@@ -143,71 +160,91 @@
                         $delay      = ($i % 3) * 80;
                     @endphp
 
-                    {{-- AOS: staggered zoom-in per card --}}
-                    <div class="schedule-card {{ $registered ? 'registered' : '' }}"
-                         data-aos="zoom-in" data-aos-delay="{{ $delay }}">
+                    <div data-aos="zoom-in" data-aos-delay="{{ $delay }}" style="display:flex;">
+                        <div class="schedule-card {{ $registered ? 'registered' : '' }}" style="flex:1;">
 
-                        {{-- Registered badge --}}
-                        @if($registered)
-                            <div class="registered-badge">
-                                <span class="badge badge-diterima">✅ Sudah Daftar</span>
+                            @if($registered)
+                                <div class="registered-badge">
+                                    <span class="badge badge-diterima">✅ Sudah Daftar</span>
+                                </div>
+                            @endif
+
+                            {{-- Banner gambar jika ada --}}
+                            @if($s->gambar)
+                                <img src="{{ Storage::url($s->gambar) }}"
+                                     alt="Banner"
+                                     style="width:calc(100% + 2.5rem);margin:-1.1rem -1.25rem 0.85rem;
+                                            aspect-ratio:16/9;object-fit:cover;border-radius:11px 11px 0 0;">
+                            @endif
+
+                            <p class="schedule-date">
+                                {{ \Carbon\Carbon::parse($s->tanggal)->translatedFormat('d F Y') }}
+                            </p>
+                            <p class="schedule-time">⏰ {{ substr($s->waktu,0,5) }} WIB</p>
+                            <p class="schedule-location">📍 {{ $s->lokasi }}</p>
+
+                            {{-- Biaya --}}
+                            @if($s->biaya > 0)
+                                <p style="font-size:.8rem;font-weight:700;color:#CC0000;margin-bottom:.4rem;">
+                                    💰 Rp {{ number_format($s->biaya,0,',','.') }}
+                                </p>
+                            @else
+                                <p style="font-size:.8rem;font-weight:600;color:#10B981;margin-bottom:.4rem;">💚 Gratis</p>
+                            @endif
+
+                            {{-- Note — flex-grow pushes button down --}}
+                            @if($s->keterangan)
+                                <p class="schedule-note">{{ $s->keterangan }}</p>
+                            @else
+                                <div class="schedule-spacer"></div>
+                            @endif
+
+                            {{-- Quota bar --}}
+                            <div class="quota-bar-wrap">
+                                <span class="quota-text">Kuota: {{ $sisa }}/{{ $s->kuota }}</span>
+                                <div class="quota-bar-bg">
+                                    <div class="quota-bar-fill" style="width:{{ $pct }}%;background:{{ $barColor }};"></div>
+                                </div>
                             </div>
-                        @endif
 
-                        {{-- Date --}}
-                        <p class="schedule-date">
-                            {{ \Carbon\Carbon::parse($s->tanggal)->translatedFormat('d F Y') }}
-                        </p>
-                        <p class="schedule-time">⏰ {{ substr($s->waktu,0,5) }} WIB</p>
-                        <p class="schedule-location">📍 {{ $s->lokasi }}</p>
-
-                        @if($s->keterangan)
-                            <p class="schedule-note">{{ $s->keterangan }}</p>
-                        @endif
-
-                        {{-- Quota progress bar --}}
-                        <div class="quota-bar-wrap">
-                            <span class="quota-text">Kuota: {{ $sisa }}/{{ $s->kuota }}</span>
-                            <div class="quota-bar-bg">
-                                <div class="quota-bar-fill"
-                                     style="width:{{ $pct }}%;background:{{ $barColor }};"></div>
-                            </div>
-                        </div>
-
-                        {{-- Action Button --}}
-                        @if(!$registered && Auth::user()->isAktif() && $sisa > 0)
-                            <form method="POST" action="{{ route('donor.schedule.store') }}"
-                                  onsubmit="return confirm('Konfirmasi pendaftaran jadwal ini?')">
-                                @csrf
-                                <input type="hidden" name="schedule_id" value="{{ $s->id }}">
-                                <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
-                                    🩸 Daftar Jadwal Ini
+                            {{-- Action Button — always at bottom --}}
+                            @if(!$registered && Auth::user()->isAktif() && $sisa > 0)
+                                <form method="POST" action="{{ route('donor.schedule.store') }}"
+                                      onsubmit="return confirm('Konfirmasi pendaftaran jadwal ini?')">
+                                    @csrf
+                                    <input type="hidden" name="schedule_id" value="{{ $s->id }}">
+                                    <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:auto;">
+                                        🩸 Daftar Jadwal Ini
+                                    </button>
+                                </form>
+                            @elseif($sisa <= 0 && !$registered)
+                                <button class="btn btn-secondary"
+                                        style="width:100%;justify-content:center;opacity:.6;cursor:not-allowed;margin-top:auto;" disabled>
+                                    Kuota Penuh
                                 </button>
-                            </form>
-                        @elseif($sisa <= 0 && !$registered)
-                            <button class="btn btn-secondary"
-                                    style="width:100%;justify-content:center;opacity:.6;cursor:not-allowed;" disabled>
-                                Kuota Penuh
-                            </button>
-                        @endif
+                            @endif
+
+                        </div>
                     </div>
                 @endforeach
             </div>
 
         @else
-            {{-- Empty state --}}
             <div class="card" style="text-align:center;padding:3rem;" data-aos="fade-up">
                 <p style="font-size:2.5rem;margin-bottom:.75rem;">📅</p>
                 <p style="font-weight:800;font-size:1.1rem;color:var(--text);margin-bottom:.5rem;">
                     Tidak Ada Jadwal Tersedia
                 </p>
                 <p style="color:var(--text-muted);">
-                    Saat ini belum ada jadwal donor yang dibuka. Silakan cek kembali nanti.
+                    @if(request()->hasAny(['dari','hingga']))
+                        Tidak ada jadwal pada rentang tanggal tersebut. <a href="{{ route('donor.schedules') }}" style="color:#CC0000;">Reset filter</a>
+                    @else
+                        Saat ini belum ada jadwal donor yang dibuka. Silakan cek kembali nanti.
+                    @endif
                 </p>
             </div>
         @endif
 
-    </div>{{-- /content-area --}}
-</div>{{-- /layout --}}
-
+    </div>
+</div>
 @endsection

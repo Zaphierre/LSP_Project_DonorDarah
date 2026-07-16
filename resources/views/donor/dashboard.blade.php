@@ -266,8 +266,12 @@
                                 </td>
                                 <td>
                                     @if($reg->status === 'diterima' && !$reg->payment)
-                                        <button onclick="openPaymentModal({{ $reg->id }})"
-                                                class="btn btn-primary btn-sm">Upload Bukti</button>
+                                        @if(($reg->schedule->biaya ?? 0) > 0)
+                                            <button onclick="openPaymentModal({{ $reg->id }}, {{ $reg->schedule->biaya }})"
+                                                    class="btn btn-primary btn-sm">💳 Upload Bukti</button>
+                                        @else
+                                            <span class="badge badge-diterima">✅ Gratis</span>
+                                        @endif
                                     @endif
                                     @if($reg->catatan)
                                         <span style="font-size:.75rem;color:var(--text-muted);display:block;margin-top:.25rem;">
@@ -337,20 +341,23 @@
         <form method="POST" action="{{ route('donor.payment.upload') }}" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="registration_id" id="modalRegId">
+            {{-- Poin 6: Nominal read-only, diambil dari biaya jadwal --}}
             <div class="form-group">
-                <label class="form-label">Nominal Transfer (Rp)</label>
-                <input type="number" name="nominal" class="form-control"
-                       placeholder="Contoh: 50000" min="0">
+                <label class="form-label">Biaya Pendaftaran</label>
+                <div id="modalNominalDisplay"
+                     style="padding:.65rem 1rem;background:#F8FAFC;border:1.5px solid #E2E8F0;
+                            border-radius:8px;font-size:.95rem;font-weight:700;color:#0F172A;">
+                    Rp 0
+                </div>
+                <p style="font-size:.75rem;color:var(--text-muted);margin-top:.3rem;">
+                    Nominal ditetapkan oleh admin dan tidak dapat diubah.
+                </p>
             </div>
             <div class="form-group">
-                <label class="form-label">
-                    Bukti Transfer <span style="color:var(--red-primary);">*</span>
-                </label>
+                <label class="form-label">Bukti Transfer <span style="color:var(--red-primary);">*</span></label>
                 <input type="file" name="bukti_transfer" class="form-control"
                        accept=".jpg,.jpeg,.png,.pdf" required>
-                <p style="font-size:.75rem;color:var(--text-muted);margin-top:.3rem;">
-                    Format: JPG, PNG, atau PDF. Maks 2MB.
-                </p>
+                <p style="font-size:.75rem;color:var(--text-muted);margin-top:.3rem;">Format: JPG, PNG, atau PDF. Maks 2MB.</p>
             </div>
             <div style="display:flex;gap:.75rem;">
                 <button type="button" onclick="closePaymentModal()"
@@ -365,8 +372,12 @@
 
 @push('scripts')
 <script>
-function openPaymentModal(regId) {
+function openPaymentModal(regId, biaya) {
     document.getElementById('modalRegId').value = regId;
+    const formatted = biaya > 0
+        ? 'Rp ' + Number(biaya).toLocaleString('id-ID')
+        : 'Gratis';
+    document.getElementById('modalNominalDisplay').textContent = formatted;
     document.getElementById('paymentModal').style.display = 'flex';
 }
 function closePaymentModal() {

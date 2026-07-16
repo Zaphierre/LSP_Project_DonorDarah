@@ -29,7 +29,14 @@
         @if($announcements->count() > 0)
             <div style="display:flex;flex-direction:column;gap:1rem;">
                 @foreach($announcements as $a)
-                    <div class="card" style="border-left:3px solid var(--red-primary);">
+                    <div class="card" style="border-left:3px solid var(--red-primary);overflow:hidden;">
+                        {{-- Gambar banner jika ada --}}
+                        @if($a->gambar)
+                            <img src="{{ Storage::url($a->gambar) }}"
+                                 alt="{{ $a->judul }}"
+                                 style="width:calc(100% + 3rem);margin:-1.5rem -1.5rem 1rem;
+                                        max-height:220px;object-fit:cover;">
+                        @endif
                         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;">
                             <h2 style="font-size:1rem;font-weight:700;">{{ $a->judul }}</h2>
                             <span style="font-size:.8rem;color:var(--text-subtle);flex-shrink:0;">
@@ -38,9 +45,6 @@
                         </div>
                         <hr class="divider">
                         <p style="line-height:1.8;color:var(--text-muted);font-size:.9rem;">{{ $a->isi }}</p>
-                        <p style="font-size:.75rem;color:var(--text-subtle);margin-top:1rem;">
-                            Dipublikasikan oleh: {{ $a->admin?->name ?? 'Admin' }}
-                        </p>
                     </div>
                 @endforeach
             </div>
