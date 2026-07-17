@@ -1,3 +1,7 @@
+Projek LSP -- Case 16 (Donor Darah) 
+Zavier Billy Prasetyo 
+2226560102
+
 Panduan Instalasi Projek Donor Darah
 
 Projek ini merupakan aplikasi web manajemen donor darah yang dibangun menggunakan teknologi modern. Panduan di bawah ini akan membantu Anda mengatur dan menjalankan projek di lingkungan pengembangan lokal (local environment).
